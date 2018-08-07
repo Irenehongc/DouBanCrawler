@@ -1,6 +1,3 @@
-from urllib.request import urlopen
-
-import re
 import requests
 import time
 from bs4 import BeautifulSoup
@@ -29,5 +26,5 @@ for i in range(int(int(review_num)/20)):
     for rid in all_rid:
         review_id = rid.get('data-rid')
         review_ids.append(review_id)
-        print(review_id)
-    time.sleep(2)
+    time.sleep(5)
+print(review_ids)
