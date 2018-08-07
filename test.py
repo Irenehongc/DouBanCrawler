@@ -1,6 +1,8 @@
 from urllib.request import urlopen
 
+import re
 import requests
+import time
 from bs4 import BeautifulSoup
 
 
@@ -10,10 +12,22 @@ review_html = requests.get(url,  headers=headers)
 Soup = BeautifulSoup(review_html.text, 'html.parser')
 # 获取总条数
 review_num = Soup.find_all('span', class_='count')
+review_num = str(review_num).replace('[<span class="count">(共', '').replace('条)</span>]', '')
 print(review_num)
 
-# 获取当页review_id
-# all_rid = Soup.find_all('div', class_='review-short')
-# for rid in all_rid:
-#     review_id = rid.get('data-rid')
-#     print(review_id)
+
+# 获取每一页的id
+review_ids = []
+for i in range(int(int(review_num)/20)):
+    url = 'https://movie.douban.com/subject/27133303/reviews?sort=hotest&start=%d' % i*20
+    review_html = requests.get(url, headers=headers)
+    soup = BeautifulSoup(review_html.text, 'html.parser')
+
+    # 再加一个判断：是否是折叠页
+
+    all_rid = soup.find_all('div', class_='review-short')
+    for rid in all_rid:
+        review_id = rid.get('data-rid')
+        review_ids.append(review_id)
+        print(review_id)
+    time.sleep(2)
