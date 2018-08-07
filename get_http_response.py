@@ -5,7 +5,8 @@ import ssl
 def get(url):
     context = ssl._create_unverified_context()
     page = urlopen(url, context=context)
-    html = page.read()
-    # print(html)
+    try:
+        html = page.read()
+    except BaseException:
+        print(url)
     return html
-

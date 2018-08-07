@@ -22,7 +22,7 @@ class MyConnection:
         self.connection.commit()
         pass
 
-    def get_infor(self):
+    def get_information(self):
         print(self.connection.db)
         pass
 

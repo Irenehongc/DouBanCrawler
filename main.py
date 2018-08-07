@@ -5,8 +5,8 @@
 #   标签电影url https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=1000
 #
 
-from movie_all import get_movie_all
-import movie
+import movie_all
+import review
 from mysql import MyConnection
 import time
 
@@ -16,17 +16,14 @@ url = 'https://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97
 
 
 my_connection = MyConnection()
-movies = get_movie_all(url)
-# print(movies)
-for movie_id in movies:
-    movie_info = movie.get_movie_info(movie_id)
-    sql = movie.get_insert_sql(movie_info)
-    # print(sql)
-    # input("x: ")
-    try:
-        my_connection.execute(sql)
-    except BaseException:
-        print(sql)
-    time.sleep(10)
+# 获取已下载的电影id
+results = movie_all.get_is_download_movie(my_connection)
+is_download = []
+for item in results:
+    is_download.append(item['movie_id'])
+
+for item in is_download:
+    # 遍历每部电影的影评
+    reviews_info = review.get_reviews_by_movie_id(item)
 
 my_connection.close()

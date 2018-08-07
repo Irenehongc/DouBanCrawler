@@ -1,4 +1,5 @@
 from get_http_response import get
+from bs4 import BeautifulSoup
 
 
 def get_commenter_uid(review_urls):
@@ -6,16 +7,24 @@ def get_commenter_uid(review_urls):
     return uid
 
 
+def get_reviews_url(response):
+    urls = []
+    soup = BeautifulSoup(response)
+    main_bd = soup.div['class'] = 'main-bd'
+    return urls
+
+
 def get_reviews_by_movie_id(movie_id):
     url = "https://movie.douban.com/subject/%s/reviews" % movie_id
     response = get(url)
     #   获取所有影评的链接
-    review_urls = response['']
+    review_urls = get_reviews_url(response)
     review_info = {'movie_id': movie_id}
     for url in review_urls:
         review_id = '解析url获得review_id'
         review = get_reviews_info(review_id)
         uid = get_commenter_uid(url)
+        review_info['review_id'] = review_id
         review_info['uid'] = uid
         review_info['content'] = review['content']
         pass
